@@ -1,0 +1,64 @@
+{% extends 'base/base.html' %}
+{% block title %} Register For Candidate {% endblock %}
+{% load crispy_forms_tags %}
+{% block btn-denied %}{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="card">
+            <div class="card-border bg-dark text-center text-white">
+                PD-22 | SD-10 | DA-12
+            </div>
+        </div>
+        <form action="{% url 'register-candidate' %}" enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            <div class="card border-dark p-3">
+                <div class="row">
+                    <div class="col-6">
+                        {{form.firstname|as_crispy_field}}
+                    </div>
+                    <div class="col-6">
+                        {{form.lastname|as_crispy_field}}
+                    </div>
+                    
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        {{form.email|as_crispy_field}}
+                    </div>
+                    <div class="col-6">
+                        {{form.job|as_crispy_field}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        {{form.age|as_crispy_field}}
+                    </div>
+                    <div class="col-6">
+                        {{form.phone|as_crispy_field}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        {{form.gender|as_crispy_field}}
+                    </div>
+                    <div class="col-6">
+                        {{form.exprience|as_crispy_field}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        {{form.company|as_crispy_field}}
+                    </div>
+                    <div class="col-4">
+                        {{form.image|as_crispy_field}}
+                    </div>
+                    <div class="col-4">
+                        {{form.file|as_crispy_field}}
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <button class="btn btn-primary" type="submit">Register</button>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,153 @@
+{% extends 'base/base.html' %}
+{% block title %}Home {% endblock %}
+{% block content %}
+    <div class="container">
+      {% for message in messages %}
+      <div class="alert alert-{{message.tags}}" role="alert">
+        {{message}}
+      </div>
+      {% endfor %}
+      <div class="row">
+          <div class="col-xl-3 col-sm-6 col-6 mb-2">
+            <div class="card p-3 bg-secondary text-light">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div class="align-self-center">
+                          <i class="fas fa-users fa-4x"></i>
+                        </div>
+                        <div class="text-end">
+                            <h3> {{total}} </h3>
+                            <p class="mb-0">TOTAL</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-6 mb-2">
+            <div class="card p-3 bg-secondary text-light">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div class="align-self-center">
+                          <i class="fa-brands fa-python fa-3x"></i>
+                        </div>
+                        <div class="text-end">
+                            <h3> {{pd}} </h3>
+                            
+                            <p class="mb-0">PYTHON DEVELOPER</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-6 mb-2">
+            <div class="card p-3 bg-secondary text-light">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div class="align-self-center">
+                          <i class="fa-brands fa-uncharted fa-2x"></i>                        </div>
+                        <div class="text-end">
+                            <h3> {{sd}} </h3>
+                            <p class="mb-0">SOFTWARE DEVELOPER</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 col-6 mb-2">
+            <div class="card p-3 bg-secondary text-light">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div class="align-self-center">
+                          <i class="fa-solid fa-magnifying-glass-chart fa-2x"></i>
+                        </div>
+                          <div class="text-end">
+                            <h3> {{da}} </h3>
+                            <p class="mb-0">DATA ANALISE</p>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <table class="table mt-3">
+            <thead>
+              <tr>
+                <th class="bg-secondary" scope="col">Full Name</th>
+                <th class="bg-secondary" scope="col">Email</th>
+                <th class="bg-secondary" scope="col">Phone</th>
+                <th class="bg-secondary" scope="col">Gender</th>
+                <th class="bg-secondary" scope="col">Job</th>
+                <th class="bg-secondary" scope="col">Recived</th>
+                <th class="bg-secondary" scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for candidate in candidates %}
+                {% include 'modals/note.html' %}
+                {% include 'modals/delete.html' %}
+                {% include 'modals/email.html' %}
+              <tr>
+                <td>{{candidate.firstname}} {{candidate.lastname}} </td>
+                <td> {{candidate.email}} </td>
+                <td> {{candidate.phone}} </td>
+                <td> {{candidate.gender}} </td>
+                <td> {{candidate.job}} </td>
+                <td> {{candidate.created_at}} </td>
+                <td>
+                    <a href="{% url 'candidate' candidate.id %}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-user-alt"></i>
+                    </a>
+                    <a href="{% url 'chat' candidate.id %}" class="btn btn-sm">
+                      <i class="fas fa-comment-alt"></i>
+                    </a>
+                    {% if request.user.is_superuser %}
+                      <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{candidate.pk}}">
+                        <i class="fas fa-trash-alt"></i>
+                      </a>
+
+                    {% endif %}
+                    {% if candidate.company_note == '' %}
+                    <button disabled class="btn btn-outline-warning text-dark">
+                      <i class="fas fa-question"></i>
+                    </button>
+                    <button disabled  class="btn btn-outline-primary ms-1">
+                      <i class="fas fa-envelope"></i>
+                    </button>
+                    {% else %}
+                    <button class="btn btn-primary ms-1" data-bs-toggle="modal" data-bs-target="#emailModal{{candidate.pk}}">
+                      <i class="fas fa-envelope"></i>
+                    </button>
+                    <button class="btn btn-warning text-dark" data-bs-toggle="modal" data-bs-target="#noteModal{{candidate.pk}}">
+                      <i class="fas fa-question"></i>
+                    </button>
+                    {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <nav aria-label="Page navigation example">
+            {% if candidates.has_other_pages %}
+
+        <ul class="pagination">
+            {% if candidates.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1 {% if request.GET.q %} &q={{request.GET.q}}  {% elif request.GET.f %} &f={{request.GET.f}} {% endif %}">1</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{canditates.previous_page_number}} {% if request.GET.q %} &q={{request.GET.q}}  {% elif request.GET.f %} &f={{request.GET.f}} {% endif %}">Previous</a></li>
+            {% endif %}
+            {% for i in candidates.paginator.page_range %}
+            {% if candidates.number == i %}
+            <li class="page-item active"><span class="page-link">{{i}}</span><span></span></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{i}} {% if request.GET.q %} &q={{request.GET.q}}  {% elif request.GET.f %} &f={{request.GET.f}} {% endif %}">{{i}}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if candidates.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{canditates.next_page_number}} {% if request.GET.q %} &q={{request.GET.q}} {% elif request.GET.f %} &f={{request.GET.f}} {% endif %}">Next</a></li>
+            <a class="page-link" href="?page={{canditates.paginator.num_pages}} {% if request.GET.q %} &q={{request.GET.q}}  {% elif request.GET.f %} &f={{request.GET.f}} {% endif %}">Last</a>
+
+          {% endif %}
+        </ul>
+        {% endif %}
+      </nav>   
+    </div>
+{% endblock %}

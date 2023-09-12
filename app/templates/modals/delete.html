@@ -1,0 +1,18 @@
+{% extends 'modals/baseModal.html' %}
+{% block id %} id="deleteModal{{candidate.pk}}" {% endblock id %}
+{% block title %} <i class="fas fa-trash-alt"></i>&nbsp;&nbsp; Company Note {% endblock title %}
+{% block body %}
+    <div class="text-center text-danger">
+        <i class="far fa-times-circle fa-5x mb-4 mt-2"></i>
+    </div>
+    <div class="text-center text-danger">
+        <span>DO YOU WANT TO DELETE THIS CANDIDATE</span>
+        <div class="text-dark mt-3">
+            Candidate: <strong> {{candidate.firstname}} {{candidate.lastname}} </strong>
+        </div>
+    </div>
+
+{% endblock body %}
+{% block footer %} 
+    <a href="{% url 'delete' candidate.id %}" class="btn btn-danger btn-sm">Delete Candidate</a>
+{% endblock footer %}
